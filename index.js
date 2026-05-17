@@ -1,3 +1,8 @@
+import crypto from 'crypto'
+global.crypto = crypto
+
+import { makeWASocket, DisconnectReason, useMultiFileAuthState } from '@whiskeysockets/baileys'
+import qrcode from 'qrcode-terminal'
 import { makeWASocket, DisconnectReason, useMultiFileAuthState } from '@whiskeysockets/baileys'
 import qrcode from 'qrcode-terminal'
 import fs from 'fs'
