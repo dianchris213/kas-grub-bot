@@ -2,10 +2,6 @@ import crypto from 'crypto'
 global.crypto = crypto
 
 import { makeWASocket, DisconnectReason, useMultiFileAuthState } from '@whiskeysockets/baileys'
-import readline from 'readline'
-
-const rl = readline.createInterface({ input: process.stdin, output: process.stdout })
-const question = (text) => new Promise((resolve) => rl.question(text, resolve))
 
 const startSock = async () => {
   const { state, saveCreds } = await useMultiFileAuthState('auth_info')
@@ -15,8 +11,13 @@ const startSock = async () => {
     printQRInTerminal: false
   })
 
+  // Pakai nomor dari Railway Environment Variable
   if (!sock.authState.creds.registered) {
-    const phoneNumber = await question('Masukkan nomor WA kamu pakai 62xxx: ')
+    const phoneNumber = process.env.PHONE_NUMBER
+    if (!phoneNumber) {
+      console.log('Error: Set PHONE_NUMBER di Railway Variables dulu!')
+      process.exit(1)
+    }
     const code = await sock.requestPairingCode(phoneNumber.replace(/[^0-9]/g, ''))
     console.log(`\nKode Pairing kamu: ${code}\nBuka WhatsApp > Linked Devices > Link with phone number > masukin kode ini`)
   }
@@ -29,7 +30,6 @@ const startSock = async () => {
       if (shouldReconnect) startSock()
     } else if (connection === 'open') {
       console.log('Bot sudah terhubung!')
-      rl.close()
     }
   })
 
