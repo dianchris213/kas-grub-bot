@@ -1,0 +1,12 @@
+{
+  "name": "kas-grub-bot",
+  "version": "1.0.0",
+  "description": "KAS Grub Bot Project",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
