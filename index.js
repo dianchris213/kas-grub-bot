@@ -1,7 +1,7 @@
 import makeWASocket, {
   DisconnectReason,
   useMultiFileAuthState
-} from '@whiskeySockets/baileys'
+} from '@whiskeysockets/baileys'
 import qrcode from 'qrcode-terminal'
 import fs from 'fs'
 
