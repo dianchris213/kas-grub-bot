@@ -5,17 +5,11 @@ import fs from 'fs'
 import { makeWASocket, DisconnectReason, useMultiFileAuthState } from '@whiskeysockets/baileys'
 
 const startSock = async () => {
-  // Hapus auth_info kalau variable CLEAR_AUTH=true di Railway
-  if (process.env.CLEAR_AUTH && fs.existsSync('./auth_info')) {
-    fs.rmSync('./auth_info', { recursive: true, force: true })
-    console.log('auth_info dihapus, reset pairing')
-  }
-
   const { state, saveCreds } = await useMultiFileAuthState('auth_info')
 
   const sock = makeWASocket({
     auth: state,
-    printQRInTerminal: true, // Ubah jadi true biar muncul QR
+    printQRInTerminal: true, // INI PENTING: biar QR muncul di logs
     syncFullHistory: false
   })
 
@@ -23,7 +17,7 @@ const startSock = async () => {
     const { connection, lastDisconnect, qr } = update
 
     if (qr) {
-      console.log('\nScan QR ini di WhatsApp > Perangkat Tertaut > Tautkan Perangkat\n')
+      console.log('\n====== SCAN QR INI DI WHATSAPP ======')
     }
 
     if (connection === 'close') {
@@ -31,7 +25,7 @@ const startSock = async () => {
       console.log('Koneksi terputus, reconnect:', shouldReconnect)
       if (shouldReconnect) startSock()
     } else if (connection === 'open') {
-      console.log('Bot sudah terhubung!')
+      console.log('Bot sudah terhubung! ✅')
     }
   })
 
