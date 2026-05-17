@@ -15,22 +15,17 @@ const startSock = async () => {
 
   const sock = makeWASocket({
     auth: state,
-    printQRInTerminal: false
+    printQRInTerminal: true, // Ubah jadi true biar muncul QR
+    syncFullHistory: false
   })
 
-  // Pakai nomor dari Railway Environment Variable
-  if (!sock.authState.creds.registered) {
-    const phoneNumber = process.env.PHONE_NUMBER
-    if (!phoneNumber) {
-      console.log('Error: Set PHONE_NUMBER di Railway Variables dulu!')
-      process.exit(1)
-    }
-    const code = await sock.requestPairingCode(phoneNumber.replace(/[^0-9]/g, ''))
-    console.log(`\nKode Pairing kamu: ${code}\nBuka WhatsApp > Linked Devices > Link with phone number > masukin kode ini`)
-  }
-
   sock.ev.on('connection.update', (update) => {
-    const { connection, lastDisconnect } = update
+    const { connection, lastDisconnect, qr } = update
+
+    if (qr) {
+      console.log('\nScan QR ini di WhatsApp > Perangkat Tertaut > Tautkan Perangkat\n')
+    }
+
     if (connection === 'close') {
       const shouldReconnect = lastDisconnect?.error?.output?.statusCode!== DisconnectReason.loggedOut
       console.log('Koneksi terputus, reconnect:', shouldReconnect)
